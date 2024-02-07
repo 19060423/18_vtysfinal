@@ -34,8 +34,8 @@ namespace _18_vtysfinal
                 yeniProje yeniProjeForm = new yeniProje();
                 yeniProjeForm.Show();
             }
-            projeBitisTarihKontrol();
             gorevBitisTarihKontrol();
+            projeBitisTarihKontrol();
         }
 
         // ***** DATAGRIDVIEW1 START ***** //
@@ -524,7 +524,7 @@ namespace _18_vtysfinal
             using (MySqlConnection cn = new MySqlConnection("server=127.0.0.1;uid=root;pwd=19060423;database=projeler"))
             {
                 cn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT projeId, calisanId, gorevId FROM görev WHERE bitisTarihi = CURDATE() AND gorevDurum != 'Tamamlandı'", cn);
+                MySqlCommand cmd = new MySqlCommand("SELECT projeId, calisanId, gorevId, gorevAd FROM görev WHERE bitisTarihi <= CURDATE() AND gorevDurum != 'Tamamlandı'", cn);
 
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -535,8 +535,9 @@ namespace _18_vtysfinal
                             int projeId = reader.GetInt32("projeId");
                             int calisanId = reader.GetInt32("calisanId");
                             int gorevId = reader.GetInt32("gorevId");
+                            string gorevAd = reader.GetString("gorevAd");
 
-                            DialogResult result = MessageBox.Show($"Proje ID: {projeId}, Çalışan ID: {calisanId}, Görev ID: {gorevId}'in bitiş tarihi bugün. Görev tamamlansın mı yoksa ertelensin mi?", "Görev Bitiş Bildirimi", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            DialogResult result = MessageBox.Show($"Görev '{gorevAd}' bugün sona eriyor. Görev tamamlanılsın mı yoksa ertelenilsin mi?", "Görev Bitiş Bildirimi", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
                             if (result == DialogResult.Yes)
                             {
@@ -559,7 +560,7 @@ namespace _18_vtysfinal
             using (MySqlConnection cn = new MySqlConnection("server=127.0.0.1;uid=root;pwd=19060423;database=projeler"))
             {
                 cn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT projeId, projeAd FROM proje WHERE bitisTarihi = CURDATE() AND projeDurum != 'Tamamlandı'", cn);
+                MySqlCommand cmd = new MySqlCommand("SELECT projeId, projeAd FROM proje WHERE bitisTarihi <= CURDATE() AND projeDurum != 'Tamamlandı'", cn);
 
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -570,7 +571,7 @@ namespace _18_vtysfinal
                             int projeId = reader.GetInt32("projeId");
                             string projeAd = reader.GetString("projeAd");
 
-                            DialogResult result = MessageBox.Show($"Proje '{projeAd}' bugün sona eriyor. Proje tamamlansın mı yoksa ertelensin mi?", "Proje Bitiş Bildirimi", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            DialogResult result = MessageBox.Show($"Proje '{projeAd}' bugün sona eriyor. Proje tamamlanılsın mı yoksa ertelenilsin mi?", "Proje Bitiş Bildirimi", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
                             if (result == DialogResult.Yes)
                             {
@@ -609,7 +610,7 @@ namespace _18_vtysfinal
                 return Convert.ToInt32(dataGridView1.Rows[row].Cells["Proje Kodu"].Value);
             }
 
-            return -1; // Indicate that no valid selection was found
+            return -1;
         }
 
         private int getCalisanId()

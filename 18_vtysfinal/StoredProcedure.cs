@@ -157,7 +157,7 @@ namespace _18_vtysfinal
         /* Specific Info End */
 
         /* Insert, Update, Delete Start */
-        /* proje */
+            /* proje */
         public void yeniProje(string ad, DateTime baslangicTarihi, DateTime bitisTarihi)
         {
             cn.Open();
